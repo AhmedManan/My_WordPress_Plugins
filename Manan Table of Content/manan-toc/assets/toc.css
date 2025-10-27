@@ -1,23 +1,59 @@
 .manan-toc {
     background: #f9f9f9;
-    border-left: 4px solid #0073aa;
+    border-left: 4px solid #7b68ee;
     padding: 15px;
     margin-bottom: 20px;
     border-radius: 6px;
     font-family: "Segoe UI", sans-serif;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    transition: all 0.3s ease;
 }
-.manan-toc ul {
+
+.manan-toc-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.manan-toc-header strong {
+    font-size: 16px;
+}
+
+.manan-toc-toggle {
+    background: none;
+    border: none;
+    color: #7b68ee;
+    cursor: pointer;
+    font-size: 13px;
+    padding: 2px 8px;
+    border-radius: 4px;
+    transition: background 0.2s ease;
+}
+
+.manan-toc-toggle:hover {
+    background: rgba(0, 115, 170, 0.1);
+}
+
+.manan-toc-list {
     list-style: none;
     margin: 10px 0 0 0;
     padding: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease, opacity 0.3s ease;
 }
-.manan-toc li {
+
+.manan-toc-list.collapsed {
+    max-height: 0;
+    opacity: 0;
+    pointer-events: none;
+}
+.manan-toc-list li {
     margin: 5px 0;
 }
-.manan-toc a {
-    color: #0073aa;
+.manan-toc-list a {
+    color: #7b68ee;
     text-decoration: none;
 }
-.manan-toc a:hover {
+.manan-toc-list a:hover {
     text-decoration: underline;
 }
