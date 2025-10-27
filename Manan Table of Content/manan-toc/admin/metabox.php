@@ -28,6 +28,7 @@ function manan_toc_metabox_callback($post) {
     }
 
     echo '<hr><label style="margin-top:8px;display:block;">
+    <p><strong>Select Default State:</strong></p>
             <input type="checkbox" name="manan_toc_collapsed" value="1" '.checked($start_collapsed, 1, false).'>
             Start closed by default
           </label>';

@@ -1,9 +1,10 @@
 <?php
 /**
  * Plugin Name: Manan Table of Content
- * Description: A sleek, collapsible Table of Content plugin that allows selecting which post sections to include and set default collapse state.
- * Version: 1.1
+ * Description: A user-friendly, light & closeable Table of Content plugin that allows you select headings from your posts to include in the TOC and lets you set the default close/expand state.
+ * Version: 1.1.1
  * Author: Manan Ahmed Broti
+ * Author URL: https://ahmedmanan.com/
  */
 
 if (!defined('ABSPATH')) exit;
