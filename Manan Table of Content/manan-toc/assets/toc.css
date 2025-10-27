@@ -1,0 +1,23 @@
+.manan-toc {
+    background: #f9f9f9;
+    border-left: 4px solid #0073aa;
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 6px;
+    font-family: "Segoe UI", sans-serif;
+}
+.manan-toc ul {
+    list-style: none;
+    margin: 10px 0 0 0;
+    padding: 0;
+}
+.manan-toc li {
+    margin: 5px 0;
+}
+.manan-toc a {
+    color: #0073aa;
+    text-decoration: none;
+}
+.manan-toc a:hover {
+    text-decoration: underline;
+}
