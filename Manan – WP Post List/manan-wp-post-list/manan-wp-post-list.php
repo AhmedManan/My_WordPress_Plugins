@@ -2,8 +2,8 @@
 /*
 Plugin Name: Manan - WP Post List
 Plugin URI: https://mananacademy.com/
-Description: Display latest posts using the theme’s default post design. Includes shortcode, Elementor widget, excerpt control, featured image toggle, and AJAX Load More.
-Version: 1.1.2
+Description: Display latest posts using the theme’s default post design. Includes shortcode, Elementor widget, excerpt control, featured image toggle, and optional AJAX Load More.
+Version: 1.1.3
 Author: Manan Ahmed Broti
 Author URI: https://ahmedmanan.com/
 License: GPL2
@@ -14,28 +14,30 @@ if (!defined('ABSPATH')) exit;
 class Manan_WP_Post_List {
 
     public function __construct() {
-        // Admin settings
+        // Admin
         add_action('admin_menu', array($this, 'add_admin_menu'));
         add_action('admin_init', array($this, 'settings_init'));
 
         // Shortcode
         add_shortcode('manan_post_list', array($this, 'render_post_list'));
 
-        // Elementor widget
+        // Elementor
         add_action('elementor/widgets/widgets_registered', array($this, 'register_elementor_widget'));
 
-        // AJAX
+        // Scripts
         add_action('wp_enqueue_scripts', array($this, 'enqueue_scripts'));
+
+        // AJAX
         add_action('wp_ajax_manan_load_more', array($this, 'load_more_posts'));
         add_action('wp_ajax_nopriv_manan_load_more', array($this, 'load_more_posts'));
 
-        // Excerpt control
+        // Excerpt
         add_filter('excerpt_length', array($this, 'custom_excerpt_length'), 999);
     }
 
-    /*---------------------
-    * ADMIN SETTINGS
-    ----------------------*/
+    /* -----------------------------
+     * ADMIN SETTINGS
+     ----------------------------- */
     public function add_admin_menu() {
         add_options_page(
             'Manan WP Post List',
@@ -52,12 +54,13 @@ class Manan_WP_Post_List {
         register_setting('manan_settings_group', 'manan_show_featured_image');
         register_setting('manan_settings_group', 'manan_filter_type');
         register_setting('manan_settings_group', 'manan_filter_value');
+        register_setting('manan_settings_group', 'manan_enable_load_more');
 
         add_settings_section(
             'manan_section',
             __('Post List Settings', 'manan-wp-post-list'),
             function() {
-                echo __('Configure how your posts will be displayed.', 'manan-wp-post-list');
+                echo __('Customize how your post list appears.', 'manan-wp-post-list');
             },
             'manan_settings_group'
         );
@@ -93,6 +96,18 @@ class Manan_WP_Post_List {
             function() {
                 $checked = get_option('manan_show_featured_image', 1);
                 echo "<input type='checkbox' name='manan_show_featured_image' value='1' " . checked(1, $checked, false) . "> Enable";
+            },
+            'manan_settings_group',
+            'manan_section'
+        );
+
+        // Load More toggle
+        add_settings_field(
+            'manan_enable_load_more',
+            __('Enable Load More Button', 'manan-wp-post-list'),
+            function() {
+                $checked = get_option('manan_enable_load_more', 1);
+                echo "<input type='checkbox' name='manan_enable_load_more' value='1' " . checked(1, $checked, false) . "> Enable";
             },
             'manan_settings_group',
             'manan_section'
@@ -142,40 +157,39 @@ class Manan_WP_Post_List {
             </form>
             <hr>
             <p><strong>Shortcode:</strong> <code>[manan_post_list]</code></p>
-            <p><strong>Elementor:</strong> Search for “<em>Manan Post List</em>” widget.</p>
+            <p><strong>Elementor:</strong> Search for “Manan Post List” widget.</p>
         </div>
         <?php
     }
 
-    /*---------------------
-    * CUSTOM EXCERPT LENGTH
-    ----------------------*/
+    /* -----------------------------
+     * EXCERPT LENGTH
+     ----------------------------- */
     public function custom_excerpt_length($length) {
-        $custom_length = get_option('manan_excerpt_length', 30);
-        return intval($custom_length);
+        return intval(get_option('manan_excerpt_length', 30));
     }
 
-    /*---------------------
-    * ENQUEUE FRONTEND FILES
-    ----------------------*/
+    /* -----------------------------
+     * ENQUEUE SCRIPTS
+     ----------------------------- */
     public function enqueue_scripts() {
-        wp_enqueue_script('manan-post-list', plugin_dir_url(__FILE__) . 'assets/script.js', array('jquery'), '1.1', true);
         wp_enqueue_style('manan-post-list-style', plugin_dir_url(__FILE__) . 'assets/style.css');
-
+        wp_enqueue_script('manan-post-list', plugin_dir_url(__FILE__) . 'assets/script.js', array('jquery'), '1.3', true);
         wp_localize_script('manan-post-list', 'manan_ajax_obj', array(
             'ajaxurl' => admin_url('admin-ajax.php'),
-            'nonce'   => wp_create_nonce('manan_load_more_nonce')
+            'nonce' => wp_create_nonce('manan_load_more_nonce')
         ));
     }
 
-    /*---------------------
-    * SHORTCODE OUTPUT
-    ----------------------*/
-    public function render_post_list($atts = []) {
+    /* -----------------------------
+     * SHORTCODE
+     ----------------------------- */
+    public function render_post_list() {
         $count = get_option('manan_post_count', 5);
         $filter_type = get_option('manan_filter_type', '');
         $filter_value = get_option('manan_filter_value', '');
         $show_image = get_option('manan_show_featured_image', 1);
+        $load_more_enabled = get_option('manan_enable_load_more', 1);
 
         $args = [
             'posts_per_page' => $count,
@@ -209,7 +223,7 @@ class Manan_WP_Post_List {
         }
         echo '</div>';
 
-        if ($query->max_num_pages > 1) {
+        if ($load_more_enabled && $query->max_num_pages > 1) {
             echo '<button id="manan-load-more" data-page="1">Load More</button>';
         }
 
@@ -217,13 +231,13 @@ class Manan_WP_Post_List {
         return ob_get_clean();
     }
 
-    /*---------------------
-    * AJAX HANDLER
-    ----------------------*/
+    /* -----------------------------
+     * AJAX HANDLER
+     ----------------------------- */
     public function load_more_posts() {
         check_ajax_referer('manan_load_more_nonce', 'nonce');
-
         $page = intval($_POST['page']) + 1;
+
         $count = get_option('manan_post_count', 5);
         $filter_type = get_option('manan_filter_type', '');
         $filter_value = get_option('manan_filter_value', '');
@@ -260,9 +274,9 @@ class Manan_WP_Post_List {
         wp_die();
     }
 
-    /*---------------------
-    * ELEMENTOR WIDGET
-    ----------------------*/
+    /* -----------------------------
+     * ELEMENTOR WIDGET
+     ----------------------------- */
     public function register_elementor_widget() {
         if (!did_action('elementor/loaded')) return;
         require_once plugin_dir_path(__FILE__) . 'widgets/manan-elementor-widget.php';
