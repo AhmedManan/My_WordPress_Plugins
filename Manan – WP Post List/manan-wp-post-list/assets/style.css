@@ -1,0 +1,15 @@
+#manan-load-more {
+  display: block;
+  margin: 20px auto;
+  padding: 10px 25px;
+  background: #0073aa;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+#manan-load-more:hover {
+  background: #005a87;
+}

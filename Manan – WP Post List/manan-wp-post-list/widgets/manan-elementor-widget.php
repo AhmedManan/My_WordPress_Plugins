@@ -2,7 +2,6 @@
 if (!defined('ABSPATH')) exit;
 
 use Elementor\Widget_Base;
-use Elementor\Controls_Manager;
 
 class Manan_Elementor_Post_List_Widget extends Widget_Base {
 
