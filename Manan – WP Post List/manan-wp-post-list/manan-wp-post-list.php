@@ -2,8 +2,8 @@
 /*
 Plugin Name: Manan - WP Post List
 Plugin URI: https://mananacademy.com/
-Description: Display latest posts using the theme’s default post design. Includes shortcode, Elementor widget, and AJAX Load More button.
-Version: 1.1.1
+Description: Display latest posts using the theme’s default post design. Includes shortcode, Elementor widget, excerpt control, featured image toggle, and AJAX Load More.
+Version: 1.1.2
 Author: Manan Ahmed Broti
 Author URI: https://ahmedmanan.com/
 License: GPL2
@@ -24,10 +24,13 @@ class Manan_WP_Post_List {
         // Elementor widget
         add_action('elementor/widgets/widgets_registered', array($this, 'register_elementor_widget'));
 
-        // AJAX actions
+        // AJAX
         add_action('wp_enqueue_scripts', array($this, 'enqueue_scripts'));
         add_action('wp_ajax_manan_load_more', array($this, 'load_more_posts'));
         add_action('wp_ajax_nopriv_manan_load_more', array($this, 'load_more_posts'));
+
+        // Excerpt control
+        add_filter('excerpt_length', array($this, 'custom_excerpt_length'), 999);
     }
 
     /*---------------------
@@ -45,6 +48,8 @@ class Manan_WP_Post_List {
 
     public function settings_init() {
         register_setting('manan_settings_group', 'manan_post_count');
+        register_setting('manan_settings_group', 'manan_excerpt_length');
+        register_setting('manan_settings_group', 'manan_show_featured_image');
         register_setting('manan_settings_group', 'manan_filter_type');
         register_setting('manan_settings_group', 'manan_filter_value');
 
@@ -52,11 +57,12 @@ class Manan_WP_Post_List {
             'manan_section',
             __('Post List Settings', 'manan-wp-post-list'),
             function() {
-                echo __('Configure how your posts will be shown.', 'manan-wp-post-list');
+                echo __('Configure how your posts will be displayed.', 'manan-wp-post-list');
             },
             'manan_settings_group'
         );
 
+        // Number of posts
         add_settings_field(
             'manan_post_count',
             __('Number of Posts per Load', 'manan-wp-post-list'),
@@ -68,6 +74,31 @@ class Manan_WP_Post_List {
             'manan_section'
         );
 
+        // Excerpt length
+        add_settings_field(
+            'manan_excerpt_length',
+            __('Excerpt Length (words)', 'manan-wp-post-list'),
+            function() {
+                $value = get_option('manan_excerpt_length', 30);
+                echo "<input type='number' name='manan_excerpt_length' value='{$value}' min='5' style='width:100px;'>";
+            },
+            'manan_settings_group',
+            'manan_section'
+        );
+
+        // Featured image toggle
+        add_settings_field(
+            'manan_show_featured_image',
+            __('Show Featured Image', 'manan-wp-post-list'),
+            function() {
+                $checked = get_option('manan_show_featured_image', 1);
+                echo "<input type='checkbox' name='manan_show_featured_image' value='1' " . checked(1, $checked, false) . "> Enable";
+            },
+            'manan_settings_group',
+            'manan_section'
+        );
+
+        // Filter type
         add_settings_field(
             'manan_filter_type',
             __('Filter Type', 'manan-wp-post-list'),
@@ -85,6 +116,7 @@ class Manan_WP_Post_List {
             'manan_section'
         );
 
+        // Filter value
         add_settings_field(
             'manan_filter_value',
             __('Filter Value', 'manan-wp-post-list'),
@@ -116,10 +148,18 @@ class Manan_WP_Post_List {
     }
 
     /*---------------------
-    * FRONTEND SCRIPTS
+    * CUSTOM EXCERPT LENGTH
+    ----------------------*/
+    public function custom_excerpt_length($length) {
+        $custom_length = get_option('manan_excerpt_length', 30);
+        return intval($custom_length);
+    }
+
+    /*---------------------
+    * ENQUEUE FRONTEND FILES
     ----------------------*/
     public function enqueue_scripts() {
-        wp_enqueue_script('manan-post-list', plugin_dir_url(__FILE__) . 'assets/script.js', array('jquery'), '1.0', true);
+        wp_enqueue_script('manan-post-list', plugin_dir_url(__FILE__) . 'assets/script.js', array('jquery'), '1.1', true);
         wp_enqueue_style('manan-post-list-style', plugin_dir_url(__FILE__) . 'assets/style.css');
 
         wp_localize_script('manan-post-list', 'manan_ajax_obj', array(
@@ -129,12 +169,13 @@ class Manan_WP_Post_List {
     }
 
     /*---------------------
-    * SHORTCODE
+    * SHORTCODE OUTPUT
     ----------------------*/
     public function render_post_list($atts = []) {
         $count = get_option('manan_post_count', 5);
         $filter_type = get_option('manan_filter_type', '');
         $filter_value = get_option('manan_filter_value', '');
+        $show_image = get_option('manan_show_featured_image', 1);
 
         $args = [
             'posts_per_page' => $count,
@@ -155,7 +196,13 @@ class Manan_WP_Post_List {
         if ($query->have_posts()) {
             while ($query->have_posts()) {
                 $query->the_post();
-                get_template_part('template-parts/content', get_post_format());
+                echo '<div class="manan-post">';
+                if ($show_image && has_post_thumbnail()) {
+                    echo '<div class="thumb"><a href="' . get_permalink() . '">' . get_the_post_thumbnail(get_the_ID(), 'medium') . '</a></div>';
+                }
+                echo '<h2><a href="' . get_permalink() . '">' . get_the_title() . '</a></h2>';
+                echo '<div class="excerpt">' . wpautop(get_the_excerpt()) . '</div>';
+                echo '</div>';
             }
         } else {
             echo '<p>No posts found.</p>';
@@ -180,6 +227,7 @@ class Manan_WP_Post_List {
         $count = get_option('manan_post_count', 5);
         $filter_type = get_option('manan_filter_type', '');
         $filter_value = get_option('manan_filter_value', '');
+        $show_image = get_option('manan_show_featured_image', 1);
 
         $args = [
             'posts_per_page' => $count,
@@ -198,10 +246,14 @@ class Manan_WP_Post_List {
         if ($query->have_posts()) {
             while ($query->have_posts()) {
                 $query->the_post();
-                get_template_part('template-parts/content', get_post_format());
+                echo '<div class="manan-post">';
+                if ($show_image && has_post_thumbnail()) {
+                    echo '<div class="thumb"><a href="' . get_permalink() . '">' . get_the_post_thumbnail(get_the_ID(), 'medium') . '</a></div>';
+                }
+                echo '<h2><a href="' . get_permalink() . '">' . get_the_title() . '</a></h2>';
+                echo '<div class="excerpt">' . wpautop(get_the_excerpt()) . '</div>';
+                echo '</div>';
             }
-        } else {
-            echo '';
         }
 
         wp_reset_postdata();
