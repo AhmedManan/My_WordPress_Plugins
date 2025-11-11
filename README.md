@@ -11,6 +11,14 @@ In this public reposity All my Free WordPress Plugins will be available.
 ### Overview
 
 ### Screenshots
+Here are some screenshot of Manan Table of Content plugin, taken from mobile devices
+<div align="center"> 
+<img src="/Manan%20Table%20of%20Content/Screenshots/manan_toc_mobile_1.jpg" max-width="400" height="400" alt="Manan ToC mobile screenshot 1" /> 
+<img src="/Manan%20Table%20of%20Content/Screenshots/manan_toc_mobile_2.jpg" max-width="400" height="400" alt="Manan ToC mobile screenshot 2" /> 
+<img src="/Manan%20Table%20of%20Content/Screenshots/manan_toc_mobile_3.jpg" max-width="400" height="400" alt="Manan ToC mobile screenshot 3" /> 
+</div>
+
+
 
 ### How To Install
 
@@ -19,6 +27,11 @@ In this public reposity All my Free WordPress Plugins will be available.
 ### Overview
 
 ### Screenshots
+Here are some screenshot of Manan - Share Blog Post plugin, taken from mobile devices
+<div align="center"> 
+<img src="/Manan%20–%20Share%20Blog%20Post/Screenshots/manan_share_blog_post_mobile_1.jpg" max-width="400" height="400" alt="Manan Share Blog Post mobile screenshot 1" />
+<img src="/Manan%20–%20Share%20Blog%20Post/Screenshots/manan_share_blog_post_mobile_2.jpg" max-width="400" height="400" alt="Manan Share Blog Post mobile screenshot 2" />
+</div>
 
 ### How To Install
 
