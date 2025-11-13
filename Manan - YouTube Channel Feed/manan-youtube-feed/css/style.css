@@ -1,0 +1,24 @@
+.manan-youtube-gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+}
+
+.manan-youtube-gallery .yt-video {
+    text-align: center;
+    background: #fff;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+}
+
+.manan-youtube-gallery iframe {
+    width: 100%;
+    height: 200px;
+}
+
+.manan-youtube-gallery h4 {
+    margin: 10px;
+    font-size: 16px;
+    color: #333;
+}
