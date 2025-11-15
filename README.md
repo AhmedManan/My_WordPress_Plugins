@@ -6,6 +6,7 @@ In this public reposity All my Free WordPress Plugins will be available.
 - [Manan Share Blog Post ](#manan-share-blog-post)
 - [Manan WP Post List ](#manan-wp-post-list)
 - [Manan Youtube Channel Feed ](#manan-youtube-channel-feed)
+- [Manan Page Popup Builderl Feed ](#manan-page-popup-builder)
 
 ## Manan Table of Content
 
@@ -46,6 +47,14 @@ Here are some screenshot of Manan - Share Blog Post plugin, taken from mobile de
 
 
 ## Manan Youtube Channel Feed
+
+### Overview
+
+### Screenshots
+
+### How To Install
+
+## Manan Page Popup Builder
 
 ### Overview
 
