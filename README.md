@@ -9,6 +9,7 @@ In this public reposity All my Free WordPress Plugins will be available.
 - [Manan Page Popup Builderl Feed ](#manan-page-popup-builder)
 
 ## Manan Table of Content
+Manan Table of Content is a user-friendly, light & closeable Table of Content plugin. It allows the user select headings from posts to include in the TOC and lets them set the default close/expand state.
 
 ### Overview
 
