@@ -26,7 +26,7 @@ Here are some screenshot of Manan Table of Content plugin, taken from mobile dev
 ### How To Install
 
 ## Manan Share Blog Post
-
+Manan Share Blog Post is a user-friendly, light & closeable Table of Content plugin. It adds beautiful share buttons with icons, copy-link, and theme color matching below blog posts with admin controls.
 ### Overview
 
 ### Screenshots
