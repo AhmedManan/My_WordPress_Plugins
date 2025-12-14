@@ -39,7 +39,7 @@ Here are some screenshot of Manan - Share Blog Post plugin, taken from mobile de
 ### How To Install
 
 ## Manan WP Post List
-
+Manan WP Post List display latest posts using the theme’s default post design. Includes shortcode, Elementor widget, excerpt control, featured image toggle, and optional AJAX Load More.
 ### Overview
 
 ### Screenshots
@@ -48,7 +48,7 @@ Here are some screenshot of Manan - Share Blog Post plugin, taken from mobile de
 
 
 ## Manan Youtube Channel Feed
-
+Manan Youtube Channel Feed display customizable YouTube channel feeds using the YouTube Data API.
 ### Overview
 
 ### Screenshots
